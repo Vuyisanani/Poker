@@ -15,7 +15,7 @@
     /* Generates corresponding '.map' file. */
     "outFile": "./src/app.js",
     /* Concatenate and emit output to single file. */
-    // "outDir": "dist",                        /* Redirect output structure to the directory. */
+    "outDir": "dist",                        /* Redirect output structure to the directory. */
     // "rootDir": "./",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     // "composite": true,                     /* Enable project compilation */
     // "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */
@@ -72,6 +72,6 @@
   },
   "include": [
     "./src/lib/**.ts",
-    "./ts/**.ts"
+    "./src/**.ts"
   ]
 }

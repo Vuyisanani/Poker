@@ -1,5 +1,5 @@
 class UI {
-    private parent: Element;
+    private parent: Element;  
     private cashDisplay: Element;
     public readonly betInput: HTMLInputElement;
     public readonly betButton: HTMLButtonElement;
