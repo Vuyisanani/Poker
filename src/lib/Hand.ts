@@ -1,11 +1,11 @@
 interface HandRank {
     name: string,
-        payout: number,
+    payout: number,
 };
 
 interface Score {
     rank: HandRank,
-        scoringCards: Card[],
+    scoringCards: Card[],
 };
 
 let Ranks: {
@@ -63,7 +63,7 @@ class Kinds {
         [rank: number]: Card[],
     };
 
-    public constructor(cards: Card[]) {
+    public constructor (cards: Card[]) {
         this.kinds = {};
 
         cards.forEach(c => {
@@ -75,7 +75,7 @@ class Kinds {
         });
     }
 
-    public has(numOfKinds: number): KindsGroup | false {
+    public has (numOfKinds: number): KindsGroup | false {
         let kg = this.all(numOfKinds);
 
         if (kg) return kg[0];
@@ -83,9 +83,9 @@ class Kinds {
         return false;
     }
 
-    public all(numOfKinds: number): KindsGroup[] | false {
+    public all (numOfKinds: number): KindsGroup[] | false {
         let result: KindsGroup[] = [];
-        // To Do:
+        //To Do: 
         for (let rank in Object.keys(this.kinds)) {
             if (this.kinds[rank].length === numOfKinds) {
                 result.push({
@@ -104,7 +104,7 @@ class Kinds {
 class Hand {
     public readonly cards: Card[];
 
-    public constructor(cards ? : Card[]) {
+    public constructor (cards?: Card[]) {
         if (cards !== undefined) {
             this.cards = cards;
         } else {
@@ -112,17 +112,17 @@ class Hand {
         }
     }
 
-    private isFlush(): boolean {
+    private isFlush (): boolean {
         let suit = this.cards[0].suit;
 
         return this.cards.every(c => c.suit === suit);
     }
 
-    private isStraight(): boolean {
+    private isStraight (): boolean {
         return this.isAceHighStraight() || this.isAceLowStraight();
     }
 
-    private isAceHighStraight(): boolean {
+    private isAceHighStraight (): boolean {
         let high, low, ranks: number[] = [];
 
         high = low = this.cards[0].rank;
@@ -132,7 +132,7 @@ class Hand {
             let r = c.rank;
 
             if (r === 1) r = 14;
-            //Checking if there are duplicates
+
             if (ranks.indexOf(r) !== -1) return false;
             ranks.push(r);
 
@@ -143,7 +143,7 @@ class Hand {
         return high - low === 4;
     }
 
-    private isAceLowStraight(): boolean {
+    private isAceLowStraight (): boolean {
         let high, low, ranks: number[] = [];
 
         high = low = this.cards[0].rank;
@@ -158,14 +158,13 @@ class Hand {
             if (r > high) high = r;
             if (r < low) low = r;
         }
-        // Difference between the cards if 4 , we have 5 cards
+
         return high - low === 4;
     }
 
-    public has(...ranks: number[]): boolean {
+    public has (...ranks: number[]): boolean {
         return this.cards.some(c => {
-            let r = c.rank,
-                i = ranks.indexOf(r);
+            let r = c.rank, i = ranks.indexOf(r);
 
             if (i !== -1) {
                 ranks.splice(i, 1);
@@ -175,17 +174,15 @@ class Hand {
         });
     }
 
-    public getScore(): Score {
+    public getScore (): Score {
         if (this.isFlush() && this.isStraight()) {
             if (this.has(1, 10, 11, 12, 13)) {
-                // Royal flush
                 return {
                     rank: Ranks.ROYAL_FLUSH,
                     scoringCards: this.cards,
                 };
             }
 
-            // Straight flush
             return {
                 rank: Ranks.STRAIGHT_FLUSH,
                 scoringCards: this.cards,
@@ -203,8 +200,7 @@ class Hand {
             };
         }
 
-        let has3 = kinds.has(3),
-            has2 = kinds.has(2);
+        let has3 = kinds.has(3), has2 = kinds.has(2);
 
         if (has3 && has2) {
             return {
@@ -264,3 +260,4 @@ class Hand {
         };
     }
 }
+

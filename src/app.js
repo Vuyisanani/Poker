@@ -7,75 +7,56 @@ var Suit;
     Suit[Suit["Diamonds"] = 3] = "Diamonds";
 })(Suit || (Suit = {}));
 ;
-var Card = /** @class */ (function () {
-    function Card(rank, suit) {
+class Card {
+    constructor(rank, suit) {
         this.rank = rank;
         this.suit = suit;
     }
-    Object.defineProperty(Card.prototype, "rankName", {
-        get: function () {
-            return Card.rankNames[this.rank - 1];
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Card.prototype, "suitName", {
-        get: function () {
-            return Suit[this.suit];
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Card.prototype, "name", {
-        get: function () {
-            return this.rankName + ' of ' + this.suitName;
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Card.prototype, "imageName", {
-        get: function () {
-            var i, j;
-            if (this.rank === 1 || this.rank > 10) {
-                j = this.rankName.charAt(0);
-            }
-            else {
-                j = this.rank + '';
-            }
-            i = this.suitName.charAt(0);
-            return j + i + '.svg';
-        },
-        enumerable: true,
-        configurable: true
-    });
-    //A: Ace, J: Jack, K: King, Q: Queen
-    Card.rankNames = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-    return Card;
-}());
-var Deck = /** @class */ (function () {
-    function Deck() {
+    get rankName() {
+        return Card.rankNames[this.rank - 1];
+    }
+    get suitName() {
+        return Suit[this.suit];
+    }
+    get name() {
+        return this.rankName + ' of ' + this.suitName;
+    }
+    get imageName() {
+        let i, j;
+        if (this.rank === 1 || this.rank > 10) {
+            j = this.rankName.charAt(0);
+        }
+        else {
+            j = this.rank + '';
+        }
+        i = this.suitName.charAt(0);
+        return j + i + '.svg';
+    }
+}
+//A: Ace, J: Jack, K: King, Q: Queen
+Card.rankNames = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+class Deck {
+    constructor() {
         this.cards = [];
-        for (var i = 0; i < 4; i++) {
-            for (var j = 1; j <= 13; j++) {
+        for (let i = 0; i < 4; i++) {
+            for (let j = 1; j <= 13; j++) {
                 this.cards.push(new Card(j, i));
             }
         }
     }
-    Deck.prototype.shuffle = function () {
-        var _a;
-        for (var n = this.cards.length; n > 0; n--) {
-            var m = Math.floor(Math.random() * n);
-            _a = [this.cards[m], this.cards[n - 1]], this.cards[n - 1] = _a[0], this.cards[m] = _a[1];
+    shuffle() {
+        for (let n = this.cards.length; n > 0; n--) {
+            let m = Math.floor(Math.random() * n);
+            [this.cards[n - 1], this.cards[m]] = [this.cards[m], this.cards[n - 1]];
         }
-    };
-    Deck.prototype.draw = function () {
+    }
+    draw() {
         return this.cards.shift();
-    };
-    return Deck;
-}());
+    }
+}
 ;
 ;
-var Ranks = {
+let Ranks = {
     ROYAL_FLUSH: {
         name: 'Royal Flush',
         payout: 800,
@@ -118,27 +99,26 @@ var Ranks = {
     },
 };
 ;
-var Kinds = /** @class */ (function () {
-    function Kinds(cards) {
-        var _this = this;
+class Kinds {
+    constructor(cards) {
         this.kinds = {};
-        cards.forEach(function (c) {
-            var r = c.rank;
-            if (_this.kinds[r] === undefined)
-                _this.kinds[r] = [];
-            _this.kinds[r].push(c);
+        cards.forEach(c => {
+            let r = c.rank;
+            if (this.kinds[r] === undefined)
+                this.kinds[r] = [];
+            this.kinds[r].push(c);
         });
     }
-    Kinds.prototype.has = function (numOfKinds) {
-        var kg = this.all(numOfKinds);
+    has(numOfKinds) {
+        let kg = this.all(numOfKinds);
         if (kg)
             return kg[0];
         return false;
-    };
-    Kinds.prototype.all = function (numOfKinds) {
-        var result = [];
-        // To Do:
-        for (var rank in Object.keys(this.kinds)) {
+    }
+    all(numOfKinds) {
+        let result = [];
+        //To Do: 
+        for (let rank in Object.keys(this.kinds)) {
             if (this.kinds[rank].length === numOfKinds) {
                 result.push({
                     cards: this.kinds[rank],
@@ -149,11 +129,10 @@ var Kinds = /** @class */ (function () {
         if (result.length === 0)
             return false;
         return result;
-    };
-    return Kinds;
-}());
-var Hand = /** @class */ (function () {
-    function Hand(cards) {
+    }
+}
+class Hand {
+    constructor(cards) {
         if (cards !== undefined) {
             this.cards = cards;
         }
@@ -161,22 +140,21 @@ var Hand = /** @class */ (function () {
             this.cards = [];
         }
     }
-    Hand.prototype.isFlush = function () {
-        var suit = this.cards[0].suit;
-        return this.cards.every(function (c) { return c.suit === suit; });
-    };
-    Hand.prototype.isStraight = function () {
+    isFlush() {
+        let suit = this.cards[0].suit;
+        return this.cards.every(c => c.suit === suit);
+    }
+    isStraight() {
         return this.isAceHighStraight() || this.isAceLowStraight();
-    };
-    Hand.prototype.isAceHighStraight = function () {
-        var high, low, ranks = [];
+    }
+    isAceHighStraight() {
+        let high, low, ranks = [];
         high = low = this.cards[0].rank;
-        for (var i = 0; i < this.cards.length; i++) {
-            var c = this.cards[i];
-            var r = c.rank;
+        for (let i = 0; i < this.cards.length; i++) {
+            let c = this.cards[i];
+            let r = c.rank;
             if (r === 1)
                 r = 14;
-            //Checking if there are duplicates
             if (ranks.indexOf(r) !== -1)
                 return false;
             ranks.push(r);
@@ -186,13 +164,13 @@ var Hand = /** @class */ (function () {
                 low = r;
         }
         return high - low === 4;
-    };
-    Hand.prototype.isAceLowStraight = function () {
-        var high, low, ranks = [];
+    }
+    isAceLowStraight() {
+        let high, low, ranks = [];
         high = low = this.cards[0].rank;
-        for (var i = 0; i < this.cards.length; i++) {
-            var c = this.cards[i];
-            var r = c.rank;
+        for (let i = 0; i < this.cards.length; i++) {
+            let c = this.cards[i];
+            let r = c.rank;
             if (ranks.indexOf(r) !== -1)
                 return false;
             ranks.push(r);
@@ -201,46 +179,39 @@ var Hand = /** @class */ (function () {
             if (r < low)
                 low = r;
         }
-        // Difference between the cards if 4 , we have 5 cards
         return high - low === 4;
-    };
-    Hand.prototype.has = function () {
-        var ranks = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            ranks[_i] = arguments[_i];
-        }
-        return this.cards.some(function (c) {
-            var r = c.rank, i = ranks.indexOf(r);
+    }
+    has(...ranks) {
+        return this.cards.some(c => {
+            let r = c.rank, i = ranks.indexOf(r);
             if (i !== -1) {
                 ranks.splice(i, 1);
             }
             return ranks.length === 0;
         });
-    };
-    Hand.prototype.getScore = function () {
+    }
+    getScore() {
         if (this.isFlush() && this.isStraight()) {
             if (this.has(1, 10, 11, 12, 13)) {
-                // Royal flush
                 return {
                     rank: Ranks.ROYAL_FLUSH,
                     scoringCards: this.cards,
                 };
             }
-            // Straight flush
             return {
                 rank: Ranks.STRAIGHT_FLUSH,
                 scoringCards: this.cards,
             };
         }
-        var kinds = new Kinds(this.cards);
-        var has4 = kinds.has(4);
+        let kinds = new Kinds(this.cards);
+        let has4 = kinds.has(4);
         if (has4) {
             return {
                 rank: Ranks.FOUR_OF_A_KIND,
                 scoringCards: has4.cards,
             };
         }
-        var has3 = kinds.has(3), has2 = kinds.has(2);
+        let has3 = kinds.has(3), has2 = kinds.has(2);
         if (has3 && has2) {
             return {
                 rank: Ranks.FULL_HOUSE,
@@ -265,13 +236,13 @@ var Hand = /** @class */ (function () {
                 scoringCards: has3.cards,
             };
         }
-        var all2 = kinds.all(2);
+        let all2 = kinds.all(2);
         if (all2 && all2.length === 2) {
             return {
                 rank: Ranks.TWO_PAIR,
-                scoringCards: (function () {
-                    var cards = [];
-                    all2.forEach(function (kg) {
+                scoringCards: (() => {
+                    let cards = [];
+                    all2.forEach(kg => {
                         cards = cards.concat(kg.cards);
                     });
                     return cards;
@@ -288,34 +259,121 @@ var Hand = /** @class */ (function () {
             rank: Ranks.NOTHING,
             scoringCards: [],
         };
-    };
-    return Hand;
-}());
-var Round = /** @class */ (function () {
-    function Round(bet) {
+    }
+}
+class Round {
+    constructor(bet) {
         this.bet = bet;
         this.deck = new Deck();
         this.deck.shuffle();
         this.hand = new Hand();
     }
-    Round.prototype.draw = function () {
+    draw() {
         this.hand.cards.push(this.deck.draw());
         this.hand.cards.push(this.deck.draw());
         this.hand.cards.push(this.deck.draw());
         this.hand.cards.push(this.deck.draw());
         this.hand.cards.push(this.deck.draw());
-    };
-    return Round;
-}());
-// let test = new Deck();
-// test.shuffle();
-// console.log(test.draw().name);
-var h = new Hand([
-    new Card(3, Suit.Diamonds),
-    new Card(5, Suit.Diamonds),
-    new Card(6, Suit.Diamonds),
-]);
-console.log(h.has(5));
-console.log(h.has(6));
-console.log(h.has(7));
+    }
+}
+class UI {
+    constructor(parent) {
+        this.parent = parent;
+        this.cashDisplay = parent.querySelector('.cash');
+        this.betInput = parent.querySelector('.bet-input');
+        this.betButton = parent.querySelector('.bet-button');
+        this.playButton = parent.querySelector('.play-button');
+        this.resetButton = parent.querySelector('.reset-button');
+        this.cardsListElement = parent.querySelector('.cards');
+        this.msg = parent.querySelector('.msg');
+        this._cards = new Map();
+    }
+    betMode() {
+        this.betInput.disabled = false;
+        this.betButton.disabled = false;
+        this.playButton.disabled = true;
+        this.resetButton.disabled = true;
+    }
+    playMode() {
+        this.betInput.disabled = true;
+        this.betButton.disabled = true;
+        this.playButton.disabled = false;
+        this.resetButton.disabled = true;
+    }
+    gameOverMode() {
+        this.betInput.disabled = true;
+        this.betButton.disabled = true;
+        this.playButton.disabled = true;
+        this.resetButton.disabled = false;
+    }
+    enableCards() {
+        this.cards.forEach((c) => {
+            c.disabled = false;
+        });
+    }
+    disableCards() {
+        this.cards.forEach((c) => {
+            c.disabled = true;
+        });
+    }
+    updateCash(cash) {
+        this.cashDisplay.textContent = '$' + cash;
+    }
+    get cards() {
+        return this._cards;
+    }
+    addCard(card) {
+        let u = new UICard(card);
+        this._cards.set(card, u);
+        this.cardsListElement.appendChild(u.element);
+        return u;
+    }
+    replaceCard(newCard, oldCard) {
+        let oldUICard = this._cards.get(oldCard);
+        if (oldUICard === undefined)
+            throw 'Card not in display';
+        let u = new UICard(newCard);
+        this.cardsListElement.replaceChild(u.element, oldUICard.element);
+        this._cards.delete(oldCard);
+        this._cards.set(newCard, u);
+        return u;
+    }
+    clearCards() {
+        this._cards = new Map();
+        while (this.cardsListElement.firstChild) {
+            this.cardsListElement.removeChild(this.cardsListElement.firstChild);
+        }
+    }
+}
+class UICard {
+    constructor(card) {
+        this.element = document.createElement('div');
+        this.img = document.createElement('img');
+        this.disabled = false;
+        this._discarded = false;
+        this._highlighted = false;
+        this.card = card;
+        this.element.classList.add('card');
+        this.element.appendChild(this.img);
+        this.img.src = 'img/' + this.card.imageName;
+        this.element.addEventListener('click', () => {
+            if (!this.disabled)
+                this.discarded = !this.discarded;
+        });
+    }
+    get discarded() {
+        return this._discarded;
+    }
+    get highlighted() {
+        return this._highlighted;
+    }
+    set discarded(value) {
+        this._discarded = value;
+        this.element.classList.toggle('discarded', this.discarded);
+    }
+    set highlighted(value) {
+        this._highlighted = value;
+        this.element.classList.toggle('highlighted', this.highlighted);
+    }
+}
 //# sourceMappingURL=app.js.map
