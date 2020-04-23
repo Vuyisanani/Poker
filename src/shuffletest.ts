@@ -7,7 +7,7 @@ let ui = new UI(document.querySelector('main')!),
 function init (): void {
     reset();
 
-    ui.betButton.addEventListener('click', function () {
+    ui.betButton.addEventListener('click', () => {
         let bet: number = parseInt(ui.betInput.value);
         if (bet > player.cash && bet <= 0) return;
         round = new Round(bet);
@@ -25,7 +25,7 @@ function init (): void {
         msg('Click on the cards you wish to discard');
     });
 
-    ui.playButton.addEventListener('click', function () {
+    ui.playButton.addEventListener('click', () => {
         round.hand.cards.forEach((c, i) => {
             let u: UICard = ui.cards.get(c)!;
 
@@ -52,27 +52,27 @@ function init (): void {
         msg('Hand: ' + score.rank.name + '<br>Winnings: $' + payout);
     });
 
-    ui.resetButton.addEventListener('click', function () {
+    ui.resetButton.addEventListener('click', () => {
         reset();
     });
 }
 
-function reset () {
+let reset = () => {
     ui.betMode();
     ui.clearCards();
     ui.enableCards();
     clearMsg();
 }
 
-function updateCash (): void {
+let updateCash = () => {
     ui.updateCash(player.cash);
 }
 
-function msg (str: string): void {
+const msg = (str: string) => {
     ui.msg.innerHTML += str + '<br>';
 }
 
-function clearMsg (): void {
+let clearMsg = () => {
     ui.msg.innerHTML = '';
 }
 
