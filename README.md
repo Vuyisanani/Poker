@@ -35,16 +35,20 @@ To build and run this app locally you will need a few things:
 # Getting started
 - Clone the repository
 ```
+```
 git clone --depth=1  https://github.com/Vuyisanani/Poker.git
 # Pre-reqs
+
 To build and run this app locally you will need a few things:
 - Install [Node.js](https://nodejs.org/en/)
 - Install [Yarn](https://yarnpkg.com/)
 - Install [VS Code](https://code.visualstudio.com/)
-
+```
 - cd <Poker>
 - yarn install
-```- Run
-```tsc -w
+```
+- Run
+```
+tsc -w
 open index.html in any browser
 ```
