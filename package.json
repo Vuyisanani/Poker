@@ -1,0 +1,12 @@
+{
+  "name": "poker_game",
+  "version": "1.0.0",
+  "description": "For this program, you will be taking a text input of playing cards and evaluating what the best poker",
+  "main": "index.js",
+  "repository": "https://github.com/Vuyisanani",
+  "author": "Vuyisanani Meteni <vmeteni@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "tslint-config-airbnb": "^5.11.2"
+  }
+}
