@@ -21,11 +21,25 @@ class Card {
         return Card.rankNames[this.rank - 1];
     }
 
-    public get suitNames(): string {
+    public get suitName(): string {
         return Suit[this.suit];
     }
     
     public get name(): string {
-        return this.rankName + ' of ' + this.suitNames;
+        return this.rankName + ' of ' + this.suitName;
+    }
+
+    public get imageName(): string {
+        let i: string, j: string;
+
+        if(this.rank === 1 || this.rank > 10) {
+            j = this.rankName.charAt(0);
+        }else {
+            j = this.rank + '';
+        }
+
+        i = this.suitName.charAt(0);
+
+        return j + i + '.svg';
     }
 }

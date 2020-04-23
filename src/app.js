@@ -19,7 +19,7 @@ var Card = /** @class */ (function () {
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(Card.prototype, "suitNames", {
+    Object.defineProperty(Card.prototype, "suitName", {
         get: function () {
             return Suit[this.suit];
         },
@@ -28,7 +28,22 @@ var Card = /** @class */ (function () {
     });
     Object.defineProperty(Card.prototype, "name", {
         get: function () {
-            return this.rankName + ' of ' + this.suitNames;
+            return this.rankName + ' of ' + this.suitName;
+        },
+        enumerable: true,
+        configurable: true
+    });
+    Object.defineProperty(Card.prototype, "imageName", {
+        get: function () {
+            var i, j;
+            if (this.rank === 1 || this.rank > 10) {
+                j = this.rankName.charAt(0);
+            }
+            else {
+                j = this.rank + '';
+            }
+            i = this.suitName.charAt(0);
+            return j + i + '.svg';
         },
         enumerable: true,
         configurable: true
@@ -275,6 +290,22 @@ var Hand = /** @class */ (function () {
         };
     };
     return Hand;
+}());
+var Round = /** @class */ (function () {
+    function Round(bet) {
+        this.bet = bet;
+        this.deck = new Deck();
+        this.deck.shuffle();
+        this.hand = new Hand();
+    }
+    Round.prototype.draw = function () {
+        this.hand.cards.push(this.deck.draw());
+        this.hand.cards.push(this.deck.draw());
+        this.hand.cards.push(this.deck.draw());
+        this.hand.cards.push(this.deck.draw());
+        this.hand.cards.push(this.deck.draw());
+    };
+    return Round;
 }());
 // let test = new Deck();
 // test.shuffle();
